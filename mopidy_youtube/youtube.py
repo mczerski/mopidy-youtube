@@ -4,7 +4,7 @@ import re
 import threading
 import traceback
 
-import cachetools
+from cachetools import func
 
 import pafy
 
@@ -51,7 +51,7 @@ class Entry(object):
     # to fetch a cached object, if available
     #
     @classmethod
-    @cachetools.lru_cache(maxsize=cache_max_len)
+    @func.lru_cache(maxsize=cache_max_len)
     def get(cls, id):
         obj = cls()
         obj.id = id
