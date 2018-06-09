@@ -72,8 +72,9 @@ class Entry(object):
                 obj._set_api_data(['title', 'channel', 'thumbnails'], item)
             return obj
 
-        data = API.search(q)
-        return map(create_object, data['items'])
+        videos = API.search(q, t='video')
+        playlists = API.search(q, t='playlist')
+        return map(create_object, videos['items']) + map(create_object, playlists['items'])
 
     # Adds futures for the given fields to all objects in list, unless they
     # already exist. Returns objects for which at least one future was added
@@ -303,12 +304,12 @@ class API:
     # https://developers.google.com/youtube/v3/docs/search
     #
     @classmethod
-    def search(cls, q):
+    def search(cls, q, t='video,playlist'):
         query = {
             'part': 'id,snippet',
             'fields': 'items(id,snippet(title,thumbnails,channelTitle))',
             'maxResults': cls.search_results,
-            'type': 'video,playlist',
+            'type': t,
             'q': q,
             'key': API.key
         }
